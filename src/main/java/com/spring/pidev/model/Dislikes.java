@@ -28,7 +28,8 @@ public class Dislikes implements Serializable {
     @JsonIgnore
     private PostComments postComments;
 
-
+    @ManyToOne
+    private User userD;
 
 
 }

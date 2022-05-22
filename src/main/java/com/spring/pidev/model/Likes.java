@@ -28,6 +28,9 @@ public class Likes implements Serializable {
     @JsonIgnore
     private PostComments postComments;
 
+    @ManyToOne
+    private User userL;
+
 
 
 

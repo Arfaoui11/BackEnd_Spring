@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 @Service
@@ -309,20 +310,20 @@ public class exportPdf {
 
 
             String  nbrheurs =" Courses  : "+f.getNbrHeures() +" hours total ";
-            String Domain = "Domain : "+f.getDomain();
-            String Formateur = f.getFormateur().getFirstName() + " " + f.getFormateur().getLastName();
+            String Domain = " Domain : "+f.getDomain();
+            String Formateur = f.getFormateur().getDisplayName().toUpperCase(Locale.ROOT);
             String Title = f.getTitle();
             String User = user.getFirstName() +" "+user.getLastName();
 
             //Read file using PdfReader
-            PdfReader pdfReader = new PdfReader("/Users/macos/IdeaProjects/springPidev/src/main/resources/static/Certif/Certif.pdf");
+            PdfReader pdfReader = new PdfReader("C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\Certif\\Certif.pdf");
 
             //Modify file using PdfReader
-            PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream("/Users/macos/IdeaProjects/springPidev/src/main/resources/static/Certif/C"+user.getId()+".pdf"));
+            PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream("C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\Certif\\C"+user.getId()+".pdf"));
 
 
             Image image = Image.getInstance(path);
-            Image image2 = Image.getInstance("/Users/macos/IdeaProjects/springPidev/src/main/resources/static/img/img.png");
+            Image image2 = Image.getInstance("C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\img\\img.png");
 
 
             image.scaleAbsolute(100, 100);
@@ -376,9 +377,11 @@ public class exportPdf {
 
 
             ColumnText.showTextAligned(canvas, Element.BODY, paragraph, 400, 350, 0);
+            ColumnText.showTextAligned(canvas, Element.BODY, paragraph1, 400, 240, 0);
+
             ColumnText.showTextAligned(canvas, Element.BODY, paragraph2, 400, 220, 0);
-            ColumnText.showTextAligned(canvas, Element.BODY, paragraph3, 470, 182, 0);
-            ColumnText.showTextAligned(canvas, Element.BODY, paragraph4, 460, 112, 0);
+            ColumnText.showTextAligned(canvas, Element.BODY, paragraph3, 490, 179, 0);
+            ColumnText.showTextAligned(canvas, Element.BODY, paragraph4, 460, 109, 0);
             ColumnText.showTextAligned(canvas, Element.BODY, paragraph5, 500, 140, 0);
 
 

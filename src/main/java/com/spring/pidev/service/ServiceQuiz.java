@@ -7,6 +7,7 @@ import com.spring.pidev.repo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,8 @@ import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -150,7 +149,7 @@ public class ServiceQuiz implements IServicesQuiz {
 
     @Override
    // @Scheduled(cron = "0 0/1 * * * *")
-    @Scheduled(cron = "0 0 20 ? * *") //every day 20:00
+    @Scheduled(cron = "0 0 0/4 ? * *") //every day 20:00
     public void giftsToUserMaxScoreInCourses() {
         User user = new User();
 
@@ -175,13 +174,11 @@ public class ServiceQuiz implements IServicesQuiz {
                     status=false;
                 }
             }
-
         }
-
     }
 
     @Override
-    @Scheduled(cron = "0 0/3 * * * *")
+    @Scheduled(cron = "0 0/10 * * * *")
     //@Scheduled(cron = "0 0 20 ? * *") //every day 20:00
     public void  ResultQuiz() throws IOException, MessagingException {
 
@@ -214,7 +211,7 @@ public class ServiceQuiz implements IServicesQuiz {
         {
             ByteArrayInputStream stream = exportExcelservice.quizexportexcel(r);
 
-            FileOutputStream out = new FileOutputStream("/Users/macos/IdeaProjects/springPidev/src/main/resources/static/ResultQuiz"+r.get(0).getQuiz().getFormation().getIdFormation()+".xlsx");
+            FileOutputStream out = new FileOutputStream("C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\ResultQuiz"+r.get(0).getQuiz().getFormation().getIdFormation()+".xlsx");
 
             byte[] buf = new byte[1024];
             int len;
@@ -223,7 +220,7 @@ public class ServiceQuiz implements IServicesQuiz {
             }
             wait(1000);
 
-            this.emailSenderService.sendSimpleEmailWithFils(user.getEmail(),"your courses was finished yours Excel liste of score  " ," finished At : "+ new Date()+"  in Courses of Domain "+form.getDomain()+" "+" And Niveau : " +form.getLevel() +" .","/Users/macos/IdeaProjects/springPidev/src/main/resources/static/ResultQuiz"+r.get(0).getQuiz().getFormation().getIdFormation()+".xlsx");
+            this.emailSenderService.sendSimpleEmailWithFils(user.getEmail(),"your courses was finished yours Excel liste of score  " ," finished At : "+ new Date()+"  in Courses of Domain "+form.getDomain()+" "+" And Niveau : " +form.getLevel() +" .","C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\ResultQuiz"+r.get(0).getQuiz().getFormation().getIdFormation()+".xlsx");
 
        }
     //  return r;
@@ -299,6 +296,18 @@ public class ServiceQuiz implements IServicesQuiz {
         this.iQuestionRepo.deleteById(idQ);
     }
 
+    @Override
+    public List<QuizCourses> listQuiqtestedbuUser(Long idU,Integer idF)
+    {
+      List<QuizCourses> quizCourses = iQuizRepo.getQuizByCourses(idF);
+      List<QuizCourses> quizTested = iQuizRepo.listQuiqtestedbuUser(idU);
+
+        List<QuizCourses> unavailable = quizCourses.stream()
+                .filter(e -> !quizTested.contains(e))
+                .collect(Collectors.toList());
+
+        return unavailable;
+    }
 
 
 

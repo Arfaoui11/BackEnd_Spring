@@ -42,7 +42,7 @@ public interface IFormationRepo extends CrudRepository<Formation,Integer> {
 
 
   //  @Query(value = "select f from Formation f where concat(f.title,f.level,f.domain,f.frais,f.nbrHeures,f.nbrMaxParticipant) like %?1% group by f order by sum(f.likes-f.dislikes) desc")
-    @Query(value = "select f from Formation f where concat(f.title,f.level,f.domain,f.frais,f.nbrHeures,f.nbrMaxParticipant) like %?1% group by f order by f.rating desc")
+    @Query(value = "select f from Formation f where concat(f.title,f.level,f.domain,f.frais,f.nbrHeures,f.nbrMaxParticipant,f.lieu) like %?1% group by f order by f.rating desc")
     List<Formation> rech(String keyword);
 
 
@@ -54,6 +54,9 @@ public interface IFormationRepo extends CrudRepository<Formation,Integer> {
 
     @Query(value = "select f from Formation f join f.apprenant a where a.id=:id")
     List<Formation> listFormationParApprenant(@Param("id") Long idApp);
+
+
+
 
 
     @Query(value = "select count(f.idFormation) from Formation f join f.formateur fr where f.start>=:dateD and f.end<=:dateF and fr.id=:id and f.domain=:domain")

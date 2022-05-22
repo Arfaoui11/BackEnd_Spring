@@ -28,7 +28,7 @@ public class PostComments {
 
 
     @ManyToOne
-    @JsonIgnore
+
     private User userC;
 
     @ManyToOne

@@ -35,14 +35,16 @@ public interface IServiceFormation {
 
     void CertifactionStudents();
 
-
+    List<Object[]> getPourcentage();
     List<Formation>  SearchMultiple(String key);
+
+    List<Object[]> getAllSearch();
 
 
     Map<String,Double> PourcentageCoursesByDomain() throws IOException, MessagingException;
 
 
-
+    void deleteFiles(String id);
 
     void ajouterApprenant(User apprenant);
     void ajouterEtAffecterFormationAFormateur(Formation formation, Long idFormateur);
@@ -79,8 +81,10 @@ public interface IServiceFormation {
 
 
 
-    void likeComments(Integer idC);
-    void dislikeComments(Integer idC);
+    void likeComments(Integer idC,Long idUser);
+    void dislikeComments(Integer idC,Long idUser);
+
+    void desaffecterApprenant(Long idUser,Integer idF);
 
 
     void FormationWithRate(Integer idF ,Double rate);

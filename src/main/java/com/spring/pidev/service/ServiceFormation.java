@@ -9,6 +9,7 @@ import com.spring.pidev.model.*;
 import com.spring.pidev.repo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ public class ServiceFormation implements IServiceFormation {
 
     @Autowired
     private UserRepository iUserRepo;
+    @Autowired
+    private DatabaseFileRepository databaseFileRepository;
 
     @Autowired
     private IFormationRepo iFormationRepo;
@@ -38,6 +41,8 @@ public class ServiceFormation implements IServiceFormation {
     private ISearchRepo iSearchRepo;
     @Autowired
     private ICommentsRepo iCommentsRepo;
+    @Autowired
+    private IRepoPourcetage iRepoPourcetage;
     @Autowired
     private ILikesRepo iLikesRepo;
     @Autowired
@@ -200,7 +205,7 @@ public class ServiceFormation implements IServiceFormation {
 
             u.setSalary(max + 200 );
             iUserRepo.save(u);
-            this.emailSenderService.sendSimpleEmailWithFils(u.getEmail(), "we have max houre of travel ", "we have max houre of travel we elevate salary with 200 $   Your salary  " + u.getSalary()+ "$  Name " + u.getLastName() + "--" + u.getFirstName() + " . ","/Users/macos/IdeaProjects/springPidev/src/main/resources/static/mybadges/goldbadge.png");
+            this.emailSenderService.sendSimpleEmailWithFils(u.getEmail(), "we have max houre of travel ", "we have max houre of travel we elevate salary with 200 $   Your salary  " + u.getSalary()+ "$  Name " + u.getLastName() + "--" + u.getFirstName() + " . ","C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\mybadges\\goldbadge.png");
 
             return u;
         }
@@ -251,7 +256,7 @@ public class ServiceFormation implements IServiceFormation {
     }
 
     @Override
-    @Scheduled(cron = "0 0/2 * * * *")
+    @Scheduled(cron = "0 0/3 * * * *")
     public void CertifactionStudents() {
 
         boolean status = false;
@@ -265,7 +270,7 @@ public class ServiceFormation implements IServiceFormation {
             {
                 for (User u : iUserRepo.getApprenantByFormation(f.getIdFormation()))
                 {
-                    if(iResultRepo.getScore(u.getId()) >= 200 && iResultRepo.getScore(u.getId()) <=250 && iResultRepo.getNbrQuiz(u.getId()) == 5 )
+                    if(iResultRepo.getScore(u.getId()) >= 180 && iResultRepo.getScore(u.getId()) <=250 && iResultRepo.getNbrQuiz(u.getId()) == 5 )
                     {
                         log.info( " Status"+iResultRepo.getNbrQuiz(u.getId()));
                         fin=false;
@@ -290,27 +295,27 @@ public class ServiceFormation implements IServiceFormation {
                                 certificat.setFormation(f);
                                 certificat.setDate(new Date());
                                 certificat.setName(u.getDisplayName());
-                                certificat.setPath("/Users/macos/IdeaProjects/springPidev/src/main/resources/static/Certif/C"+u.getId()+".pdf");
+                                certificat.setPath("C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\C"+u.getId()+".pdf");
                                 certificat.setUser(u);
 
                                 iCertificatRepo.save(certificat);
 
                                 if(this.iUserRepo.getApprenantWithScore(f.getIdFormation()).get(0).getId().equals(u.getId()))
                                 {
-                                    Path = "/Users/macos/IdeaProjects/springPidev/src/main/resources/static/mybadges/goldbadge.png";
+                                    Path = "C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\mybadges\\goldbadge.png";
                                 }else if(this.iUserRepo.getApprenantWithScore(f.getIdFormation()).get(1).getId().equals(u.getId())){
-                                    Path = "/Users/macos/IdeaProjects/springPidev/src/main/resources/static/mybadges/silverbadge.png";
+                                    Path = "C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\mybadges\\silverbadge.png";
                                 }else if(this.iUserRepo.getApprenantWithScore(f.getIdFormation()).get(2).getId().equals(u.getId()))
                                 {
-                                    Path = "/Users/macos/IdeaProjects/springPidev/src/main/resources/static/mybadges/bronzebadge.png";
+                                    Path = "C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\mybadges\\bronzebadge.png";
                                 }
 
                                 log.info(Path);
 
-
-                                export.pdfReader(f,u,Path);
                                 QRCodeGenerator.generateQRCodeImage(f.getDomain().toString(),150,150,QR_CODE_IMAGE_PATH);
-                                this.emailSenderService.sendSimpleEmailWithFils(u.getEmail()," Congratulations Mr's : "+u.getLastName()+" "+u.getFirstName()+" you have finished your Courses  " ," Certification At : "+ new Date()+"  in Courses of Domain "+f.getDomain()+" "+" And Niveau : " +f.getLevel() +" .","/Users/macos/IdeaProjects/springPidev/src/main/resources/static/Certif/C"+u.getId()+".pdf");
+                                export.pdfReader(f,u,Path);
+
+                                this.emailSenderService.sendSimpleEmailWithFils(u.getEmail()," Congratulations Mr's : "+u.getLastName()+" "+u.getFirstName()+" you have finished your Courses  " ," Certification At : "+ new Date()+"  in Courses of Domain "+f.getDomain()+" "+" And Niveau : " +f.getLevel() +" .","C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\Certif\\C"+u.getId()+".pdf");
                                 fin=true; /// return /////
                             }
 
@@ -418,7 +423,7 @@ public class ServiceFormation implements IServiceFormation {
         ///User with gifts Free for Max Score
 
 
-    if(apprenant.getState() == State.DISCIPLINED)
+    if(apprenant.getState() == State.DISCIPLINED || apprenant.getState() == State.WARNED )
     {
         if(iResultRepo.getScore(idApprenant)==null)
         {
@@ -490,7 +495,7 @@ public class ServiceFormation implements IServiceFormation {
 
 
 
-  //  @Scheduled(cron = "0 0/20 * * * *")
+  @Scheduled(cron = "0 0/60 * * * *")
     public void ListComplete()
     {
         for(Formation f : iFormationRepo.findAll())
@@ -616,16 +621,18 @@ public class ServiceFormation implements IServiceFormation {
 
     ///////////       Comments ///////////////
     @Override
-    public void likeComments(Integer idC ){
+    public void likeComments(Integer idC ,Long idUser ){
         PostComments post = iCommentsRepo.findById(idC).orElse(null);
-      //  User user = iUserRepo.findById(idU).orElse(null);
+
+        User user = iUserRepo.findById(idUser).orElse(null);
+
         Likes likes = new Likes();
 
 
         if(post.getLikes().size() == 0)
         {
             likes.setPostComments(post);
-          //  likes.setUser(user);
+            likes.setUserL(user);
             likes.setNbrLikes(1);
             likes.setCreateAt(new Date());
             iLikesRepo.save(likes);
@@ -654,16 +661,16 @@ public class ServiceFormation implements IServiceFormation {
 
 
     @Override
-    public void dislikeComments(Integer idC ) {
+    public void dislikeComments(Integer idC ,Long idUser ) {
         PostComments post = iCommentsRepo.findById(idC).orElse(null);
-      //  User user = iUserRepo.findById(idU).orElse(null);
+        User user = iUserRepo.findById(idUser).orElse(null);
         Dislikes dislikes = new Dislikes();
 
         if(post.getDislikes().size() == 0)
         {
 
             dislikes.setPostComments(post);
-          //  dislikes.setUser(user);
+            dislikes.setUserD(user);
             dislikes.setNbrDislikes(1);
             dislikes.setCreateAt(new Date());
             iDislikesRepo.save(dislikes);
@@ -717,6 +724,12 @@ public class ServiceFormation implements IServiceFormation {
 
         }
 
+    }
+
+    @Override
+    public  List<Object[]> getAllSearch()
+    {
+        return  iSearchRepo.getAllSerach();
     }
 
 
@@ -799,11 +812,11 @@ public class ServiceFormation implements IServiceFormation {
                     this.emailSenderService.sendSimpleEmail(user.getEmail(), " You Are create bad Comment in this Courses ", " You Are create bad Comment in this Courses next comment with bad word we punished 20 day please Mr's  "+user.getLastName() +" " + user.getLastName() +" this web site is for association of women empowerment not to write this type of comment !!! ");
                     user.setState(State.WARNED);
                     iUserRepo.save(user);
-                }else if(iUserRepo.nbrCommentsBadByUser(user.getId())==2 && user.getState()!=State.PUNISHED) {
+                }else if(iUserRepo.nbrCommentsBadByUser(user.getId())==5 && user.getState()!=State.PUNISHED) {
                     this.emailSenderService.sendSimpleEmail(user.getEmail(), " You Are create bad Comment in this Courses ", " You Are create Comment with bad word in this Courses we punished in all Courses   Mr's  "+user.getLastName() +" " + user.getLastName()+" this web site is for association of women empowerment not to write this type of comment !!!! ");
                     user.setState(State.PUNISHED);
                     iUserRepo.save(user);
-                }else if(iUserRepo.nbrCommentsBadByUser(user.getId())>=3 && user.getState()!=State.EXCLUDED) {
+                }else if(iUserRepo.nbrCommentsBadByUser(user.getId())>6 && user.getState()!=State.EXCLUDED) {
 
                     this.emailSenderService.sendSimpleEmail(user.getEmail(), " You Are create bad Comment in this Courses ", " You Are create Comment with bad word in this Courses we excluded in all Courses   Mr's  "+user.getLastName() +" " + user.getLastName()+" this web site is for association of women empowerment not to write this type of comment !!!! ");
 
@@ -857,11 +870,26 @@ public class ServiceFormation implements IServiceFormation {
     }
 
     @Override
+    @Transactional
+    public void desaffecterApprenant(Long idUser,Integer idF)
+    {
+        User user =  iUserRepo.findById(idUser).orElse(null);
+        Formation f = iFormationRepo.findById(idF).orElse(null);
+        f.getApprenant().remove(user);
+        iFormationRepo.save(f);
+    }
+
+    @Override
+    public void deleteFiles(String id)
+    {
+        databaseFileRepository.deleteById(id);
+    }
+    @Override
    // @Scheduled(cron = "0 0/2 * * * *")
     @Scheduled(cron = "0 0 9 28 * ?")
     public Map<String,Double> PourcentageCoursesByDomain() throws IOException, MessagingException {
 
-        Map<String,Double> pourcentages=new HashMap<>();
+        Map<String,Double> pourcentages = new HashMap<>();
 
         List<Double> pourcent = new ArrayList<>();
 
@@ -886,8 +914,8 @@ public class ServiceFormation implements IServiceFormation {
         List<Formation> formations=  (List<Formation>) iFormationRepo.findAll();
 
         for (Formation formation: iFormationRepo.listformationByDate(firstDayOfMonth,lastDayOfMonth)) {
-            if(formation.getEnd().before(new Date()))
-            {
+         //   if(formation.getEnd().before(new Date()))
+          //  {
                 if (formation.getDomain().equals(Domain.IT)) {
                     IT++;
                 }
@@ -907,7 +935,7 @@ public class ServiceFormation implements IServiceFormation {
                     MARKETING++;}
                 else if (formation.getDomain().equals(Domain.MUSIC)) {
                     MUSIC++;}
-            }
+         //   }
         }
 
         if (formations.size() !=0) {
@@ -985,18 +1013,34 @@ public class ServiceFormation implements IServiceFormation {
 
         ByteArrayInputStream stream = exportExcelservice.percentageExportExcel(pourcent);
 
-        FileOutputStream out = new FileOutputStream("/Users/macos/IdeaProjects/springPidev/src/main/resources/static/Result"+nbr+".xlsx");
+        FileOutputStream out = new FileOutputStream("C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\Result"+nbr+".xlsx");
 
         byte[] buf = new byte[1024];
         int len;
         while ((len = stream.read(buf)) > 0) {
             out.write(buf, 0, len);
         }
-        this.emailSenderService.sendSimpleEmailWithFils("mahdijr2015@gmail.com","You have pourcentage of max domain Courses " ," you have in this month "+max+" % of leaner pick courses with domain : "+max(pourcentages)+" then we  access to augment  number max of leaner in all courses with domain "+max(pourcentages)+" .","/Users/macos/IdeaProjects/springPidev/src/main/resources/static/Result"+nbr+".xlsx");
+        this.emailSenderService.sendSimpleEmailWithFils("mahdijr2015@gmail.com","You have pourcentage of max domain Courses " ," you have in this month "+max+" % of leaner pick courses with domain : "+max(pourcentages)+" then we  access to augment  number max of leaner in all courses with domain "+max(pourcentages)+" .","C:\\Users\\LEGION-5\\IdeaProjects\\newProjet2020Pidev\\src\\main\\resources\\static\\Result"+nbr+".xlsx");
+
+        iRepoPourcetage.deleteAll();
+
+        for (Map.Entry<String, Double> entry : pourcentages.entrySet() )
+        {
+           Pourcentages per = new Pourcentages();
+            per.setName(entry.getKey());
+            per.setValue(entry.getValue());
+            iRepoPourcetage.save(per);
+        }
+
 
         return pourcentages;
     }
 
+
+    public List<Object[]> getPourcentage()
+    {
+        return  iRepoPourcetage.getPourcentage();
+    }
 
     public <String, Double extends Comparable<Double>> String max(Map<String, Double> map) {
         Optional<Map.Entry<String, Double>> maxEntry = map.entrySet()

@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/Topic")
+@CrossOrigin()
 public class TopicRestController
 
 {
@@ -47,10 +48,9 @@ public class TopicRestController
 
 
         @ApiOperation(value = "Delete Topic")
-        @DeleteMapping("/deleteTopic")
+        @GetMapping("/deleteTopic/{id}")
         @ResponseBody
-
-        public void deleteTopic(Long idTopic)
+        public void deleteTopic(@PathVariable("id") Long idTopic)
         {
             iTopicService.deleteTopic(idTopic);
         }

@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
 		user.setScore(signUpRequest.getScore());
 		user.setNationality(signUpRequest.getNationality());
 		user.setPhoneNumber(signUpRequest.getPhoneNumber());
+		user.setState(State.DISCIPLINED);
 		user = userRepository.save(user);
 		userRepository.flush();
 		return user;
@@ -106,7 +107,16 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(formDTO.getEmail());
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
 		final HashSet<Role> roles = new HashSet<Role>();
-		roles.add(roleRepository.findByName(Role.ROLE_USER));
+
+		if(formDTO.getProfession() == Profession.ART || formDTO.getProfession() == Profession.DANCE || formDTO.getProfession() == Profession.MARKETING ||
+				formDTO.getProfession() == Profession.MUSIC || formDTO.getProfession() == Profession.IT || formDTO.getProfession() == Profession.ECONOMIC ||formDTO.getProfession() == Profession.PHY
+				|| formDTO.getProfession() == Profession.CINEMA ||formDTO.getProfession() == Profession.FORMER )
+		{
+			roles.add(roleRepository.findByName(Role.ROLE_MODERATOR));
+		}else
+		{
+			roles.add(roleRepository.findByName(Role.ROLE_USER));
+		}
 		user.setRoles(roles);
 		user.setFirstName(formDTO.getFirstName());
 		user.setAge(formDTO.getAge());

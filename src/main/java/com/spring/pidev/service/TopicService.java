@@ -110,7 +110,7 @@ public class TopicService implements ITopicService{
 @Override
 @Scheduled(cron = "0 0/2 * * * *")
 public void DeleteTopicAfterfinalDate() {
-    LocalDate currentdDate1 =  LocalDate.now();
+    LocalDate currentdDate1 = LocalDate.now();
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
 
@@ -127,8 +127,7 @@ public void DeleteTopicAfterfinalDate() {
     Date firstDayOfMonth = calFirst.getTime();
 
 
-    for (Topic a :  iTopicRepo.DeleteTopicAfterfinalDate(lastDayOfMonth)
-    )
+    for (Topic a : iTopicRepo.DeleteTopicAfterfinalDate(lastDayOfMonth)) {
     /*
     {
         ArchiveAppointment ar = new ArchiveAppointment();
@@ -144,6 +143,7 @@ public void DeleteTopicAfterfinalDate() {
      */
         iTopicRepo.delete(a);
     }
+}
 ///////////////////////////////////
 @Override
 public Map<String,Double> PourcentageTopicByType() {

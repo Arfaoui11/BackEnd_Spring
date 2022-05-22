@@ -49,7 +49,7 @@ public interface IServicesQuiz {
     void ResultQuiz() throws IOException, MessagingException;
 
 
-
+    List<QuizCourses> listQuiqtestedbuUser(Long idU,Integer idF);
 
 
 }

@@ -513,18 +513,18 @@ public class RestControllerForm {
     }
 
 
-    @PutMapping("/addLikes/{idC}")
+    @PutMapping("/addLikes/{idC}/{idU}")
     @ApiOperation(value = " add Likes ")
-    public void likeComments(@PathVariable(name = "idC") Integer idC){
-        iServiceFormation.likeComments(idC);
+    public void likeComments(@PathVariable(name = "idC") Integer idC ,@PathVariable(name = "idU") Long idUser ){
+        iServiceFormation.likeComments(idC,idUser);
     }
 
 
-    @PutMapping("/addDisLikes/{idC}")
+    @PutMapping("/addDisLikes/{idC}/{idU}")
     @ApiOperation(value = " add DisLikes ")
-    public void dislikeComments(@PathVariable(name = "idC") Integer idC )
+    public void dislikeComments(@PathVariable(name = "idC") Integer idC,@PathVariable(name = "idU") Long idUser )
     {
-        iServiceFormation.dislikeComments(idC);
+        iServiceFormation.dislikeComments(idC,idUser);
     }
 
 //get formation by id
@@ -536,12 +536,7 @@ public class RestControllerForm {
     }
 
 
-   /* @PostMapping("/likeFormationWithRate/{idF}/{nbr}")
-    @ApiOperation(value = " add Rate ")
-    public void likeFormationWithRate(@PathVariable(name = "idF") Integer idF,@PathVariable(name = "nbr") Integer rate)
-    {
-     //   iServiceFormation.dislikeFormationWIthRate(idF, rate);
-    }*/
+
 
     @PutMapping("/FormationWIthRate/{idF}/{nbr}")
     @ApiOperation(value = " add Rating ")
@@ -565,12 +560,43 @@ public class RestControllerForm {
 
     }
 
+    @PostMapping("/desaffecterApprenant/{idU}/{idF}")
+    @ApiOperation(value = " dessaffecter Apprenant ")
+    @ResponseBody
+    public void desaffecterApprenant(@PathVariable(name = "idU") Long idUser,@PathVariable(name = "idF") Integer idF)
+    {
+        iServiceFormation.desaffecterApprenant(idUser, idF);
+    }
+
+
     //get all comments
     @ApiOperation(value = "get all comments")
     @GetMapping("/getAllComments")
     public List<PostComments> getAllComments()
     {
         return iServiceFormation.getAllComments();
+    }
+
+    @ApiOperation(value = "get all search historique")
+    @GetMapping("/getAllSearch")
+    public  List<Object[]> getAllSearch()
+    {
+        return iServiceFormation.getAllSearch();
+    }
+
+    @ApiOperation(value = " list Quiz tested bu User  ")
+    @GetMapping("/listQuiqtestedbuUser/{id}/{idf}")
+    @ResponseBody
+    public List<QuizCourses> listQuiqtestedbuUser(@PathVariable(name = "id") Long idU ,@PathVariable(name = "idf") Integer idF)
+    {
+        return iServicesQuiz.listQuiqtestedbuUser(idU,idF);
+    }
+
+    @ApiOperation(value = "get pourcentage")
+    @GetMapping("/getPourcentage")
+    public List<Object[]> getPourcentage()
+    {
+        return iServiceFormation.getPourcentage();
     }
 
 
@@ -615,7 +641,12 @@ public class RestControllerForm {
         iServiceFormation.deleteComments(idC);
     }
 
-
+    @ApiOperation(value = "Delete files")
+    @GetMapping("/deleteFiles/{fileName:.+}")
+    public void deleteFiles(@PathVariable String fileName)
+    {
+        iServiceFormation.deleteFiles(fileName);
+    }
 
     @ApiOperation(value = " get Apprenant With Score Quiz ")
     @GetMapping("/getAllApprenantWithScoreQuiz/{idF}")

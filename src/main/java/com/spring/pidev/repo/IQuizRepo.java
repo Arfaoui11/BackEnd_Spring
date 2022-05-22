@@ -21,4 +21,14 @@ public interface IQuizRepo extends CrudRepository<QuizCourses,Integer> {
     List<QuizCourses> getQuizByCourses(@Param("id") Integer idF);
 
 
+    @Query(value = "select q from Result r join r.quiz q join r.sUser u where u.id=:id")
+    List<QuizCourses> listQuiqtestedbuUser(@Param("id") Long idU);
+
+
+  //  @Query(value = "select q from Result r join r.quiz q join r.sUser u where u.id=:id and q.idQuiz <> (select q.idQuiz from QuizCourses q join q.formation f where f.idFormation =:idf)")
+   // List<QuizCourses> listQuiqtestedbuUser(@Param("id") Long idU,@Param("idf") Integer idF);
+
+   // @Query(value = "select q from QuizCourses q join q.formation f where f.idFormation=:idf and q.idQuiz=(select q.idQuiz from Result r join r.quiz q join r.sUser u where u.id=:id)")
+   // List<QuizCourses> listQuiqtestedbuUser(@Param("id") Long idU,@Param("idf") Integer idF);
+
 }
